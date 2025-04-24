@@ -1,0 +1,75 @@
+Background: An online store needs a backend to handle order placement, track payment, and manage shipment information. Each order involves checking inventory, processing payments, and updating shipment status. The system should also notify customers of order status changes and generate invoices for each order. 
+
+Question: What are the classes you might need in this software solution?
+
+Solution:
+--------
+public class Order {
+	private BigInteger id;
+	public BigInteger getId() {
+		return id;
+	}
+}
+
+public class OrderService {
+	private final InventoryService inventoryService;
+	private final PaymentService paymentService;
+	private final ShipmentService shipmentService;
+	private final NotificationService notificationService;
+
+	public OrderService(InventoryService inventoryService, PaymentService paymentService,
+			ShipmentService shipmentService, NotificationService notificationService) {
+		this.inventoryService = inventoryService;
+		this.paymentService = paymentService;
+		this.shipmentService = shipmentService;
+		this.notificationService = notificationService;
+	}
+
+	public void createOrder(Order order) {
+		inventoryService.reserveItem(order);
+		paymentService.pay(order.getId(), 100);
+		shipmentService.updateShipmentStatus(order);
+		notificationService.sendConfirmation();
+	}
+}
+
+public interface PaymentService {
+	void pay(BigInteger orderId,  double amount);
+}
+
+public class StripePayment implements PaymentService {
+	@Override
+	public void pay(BigInteger orderId, double amount) {
+		
+	}
+}
+
+public class InvoiceService {
+	void generateInvoice(Order order) {
+		System.out.println("generating invoice.");
+	}
+}
+
+public class InventoryService {
+	boolean checkInventory(Order order) {
+		return true;
+	}
+	
+	void reserveItem(Order order) {
+		
+	}
+}
+
+public interface NotificationService {
+
+	void sendConfirmation();
+}
+
+public class SMSNotification implements NotificationService {
+	@Override
+	public void sendConfirmation() {
+
+		System.out.println("Notify by sms");
+
+	}
+}

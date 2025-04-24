@@ -1,0 +1,100 @@
+4. Background: A media player handles different media types like audio and video files. It has a MediaFile base class with common methods (play, pause, stop), while AudioFile and VideoFile subclasses may have additional needs (e.g., subtitles for video). The player should be able to manage any file type seamlessly without extra conditions.
+
+Question: How would you structure the MediaFile, AudioFile, and VideoFile classes so the player works consistently with all file types?
+
+public class MediaFile {
+
+	private String fileName;
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public MediaFile(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public void play() {
+		System.out.println("playing " + fileName);
+	}
+
+	public void pause() {
+		System.out.println("pausing " + fileName);
+	}
+
+	public void stop() {
+		System.out.println("stopping " + fileName);
+	}
+}
+
+public class AudioFile extends MediaFile {
+
+	public AudioFile(String fileName) {
+		super(fileName);
+	}
+}
+
+public class VedioFile extends MediaFile {
+
+	private String subTitle;
+	private boolean isEnableSubTitle;
+
+	public VedioFile(String fileName, String subTitle) {
+		super(fileName);
+		this.subTitle = subTitle;
+		this.isEnableSubTitle = false;
+	}
+
+	public void enableSubTitle(boolean enbleSubTitle) {
+		isEnableSubTitle = enbleSubTitle;
+		System.out.println("SubTitleEnble for vedio :" + getFileName());
+	}
+}
+
+public class MediaPlayer {
+
+	private MediaFile mediaFile;
+
+	public void load(MediaFile mediaFile) {
+		this.mediaFile = mediaFile;
+		System.out.println("Loaded file " + mediaFile.getFileName());
+	}
+
+	public void play() {
+		if (mediaFile != null) {
+			mediaFile.play();
+		}
+	}
+
+	public void pause() {
+		if (mediaFile != null) {
+			mediaFile.pause();
+		}
+	}
+
+	public void stop() {
+		if (mediaFile != null) {
+			mediaFile.stop();
+		}
+	}
+}
+
+public class Client {
+
+	public static void main(String[] args) {
+	
+		MediaFile audio = new AudioFile("a.mp3");
+		MediaPlayer player = new MediaPlayer();
+		player.load(audio);
+		player.play();
+		player.pause();
+		
+		MediaFile vedio = new VedioFile("a.mp4", "subTitle1");
+		((VedioFile)vedio).enableSubTitle(true);
+		player.load(vedio);
+		player.play();
+		
+	}
+}
+
+
